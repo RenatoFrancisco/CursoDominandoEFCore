@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using CursoEFCore.Data;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CursoEFCore
 {
@@ -11,7 +14,13 @@ namespace CursoEFCore
         {
             // EnsureCreatedAndDeleted();
             // GepDoEnsureCreated();
-            HealthCheckDatabase();
+            // HealthCheckDatabase();
+
+            _count = 0;
+            GerenciarEstadoDaConexao(false);
+            
+            _count = 0;
+            GerenciarEstadoDaConexao(true);
         }
 
         static void EnsureCreatedAndDeleted()
@@ -46,6 +55,28 @@ namespace CursoEFCore
                 Console.WriteLine("Posso me conectar");
             else
                 Console.WriteLine("Não posso me conectar");
+        }
+
+        static int _count;
+        static void GerenciarEstadoDaConexao(bool gerenciaEstadoConexao)
+        {
+            using var db = new ApplicationContext();
+
+            var time = Stopwatch.StartNew();
+
+            var connection = db.Database.GetDbConnection();
+            connection.StateChange += (_, _) => ++_count;
+
+            if (gerenciaEstadoConexao)
+                connection.Open();
+
+            for (var i = 0; i < 200; i++)
+                db.Departamentos.AsNoTracking().Any();
+
+            time.Stop();
+
+            var message = $"Tempo: {time.Elapsed}, {gerenciaEstadoConexao}, contador: {_count}";
+            Console.WriteLine(message);
         }
     }
 }
