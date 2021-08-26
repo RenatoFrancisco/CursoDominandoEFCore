@@ -18,7 +18,7 @@ namespace CursoEFCore
 
             _count = 0;
             GerenciarEstadoDaConexao(false);
-            
+
             _count = 0;
             GerenciarEstadoDaConexao(true);
         }
@@ -77,6 +77,25 @@ namespace CursoEFCore
 
             var message = $"Tempo: {time.Elapsed}, {gerenciaEstadoConexao}, contador: {_count}";
             Console.WriteLine(message);
+        }
+
+        static void ExecuteSQL()
+        {
+            using var db = new ApplicationContext();
+
+            // Primeira Opção
+            using (var cmd = db.Database.GetDbConnection().CreateCommand())
+            {
+                cmd.CommandText = "SELECT 1";
+                cmd.ExecuteNonQuery();
+            }
+
+            // Segunda Opção (Evita ataques de Sql Injection)
+            var descricao = "TESTE";
+            db.Database.ExecuteSqlRaw("update departamentos set descricao={0} where id=1", descricao);
+
+            // Terceira Opção (Evita ataques de Sql Injection)
+            db.Database.ExecuteSqlInterpolated($"update departamentos set descricao={descricao} where id=1");
         }
     }
 }
