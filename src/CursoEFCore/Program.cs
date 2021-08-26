@@ -10,7 +10,8 @@ namespace CursoEFCore
         static void Main(string[] args)
         {
             // EnsureCreatedAndDeleted();
-            GepDoEnsureCreated();
+            // GepDoEnsureCreated();
+            HealthCheckDatabase();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -34,6 +35,17 @@ namespace CursoEFCore
             // Força a criação da tabela Cidades mesmo já existindo tabelas no banco
             var databaseCreator = db2.GetService<IRelationalDatabaseCreator>();
             databaseCreator.CreateTables();
+        }
+
+        static void HealthCheckDatabase()
+        {
+            using var db = new ApplicationContext();
+            var canConnect = db.Database.CanConnect();
+
+            if (canConnect)
+                Console.WriteLine("Posso me conectar");
+            else
+                Console.WriteLine("Não posso me conectar");
         }
     }
 }
