@@ -16,11 +16,13 @@ namespace CursoEFCore
             // GepDoEnsureCreated();
             // HealthCheckDatabase();
 
-            _count = 0;
-            GerenciarEstadoDaConexao(false);
+            // _count = 0;
+            // GerenciarEstadoDaConexao(false);
 
-            _count = 0;
-            GerenciarEstadoDaConexao(true);
+            // _count = 0;
+            // GerenciarEstadoDaConexao(true);
+
+            MigracoesPendentes();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -96,6 +98,18 @@ namespace CursoEFCore
 
             // Terceira Opção (Evita ataques de Sql Injection)
             db.Database.ExecuteSqlInterpolated($"update departamentos set descricao={descricao} where id=1");
+        }
+
+        static void MigracoesPendentes()
+        {
+            // Para trabalhar com migrations é necessário instalar o pacote Microsoft.EntityFrameworkCore.Design
+            using var db = new ApplicationContext();
+
+            var migracoesPendentes = db.Database.GetPendingMigrations();
+            Console.WriteLine($"Total: {migracoesPendentes.Count()}");
+
+            foreach (var migracao in migracoesPendentes)
+                Console.WriteLine($"Migração: {migracao}");
         }
     }
 }
