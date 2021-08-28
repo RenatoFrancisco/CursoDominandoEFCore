@@ -28,7 +28,9 @@ namespace CursoEFCore
 
             // TodasMigracoes();
 
-            MigracoesJaAplicadas();
+            // MigracoesJaAplicadas();
+
+            ScriptGeralBancoDeDados();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -144,6 +146,13 @@ namespace CursoEFCore
 
             foreach (var migracao in migracoes)
                 Console.WriteLine($"Migração: {migracao}");
+        }
+
+        static void ScriptGeralBancoDeDados()
+        {
+            using var db = new ApplicationContext();
+            var script = db.Database.GenerateCreateScript();
+            Console.WriteLine(script);
         }
     }
 }
