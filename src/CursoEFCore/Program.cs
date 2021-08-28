@@ -23,6 +23,8 @@ namespace CursoEFCore
             // GerenciarEstadoDaConexao(true);
 
             MigracoesPendentes();
+
+            AplicarMigracoesEmTempoDeExecucao();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -110,6 +112,12 @@ namespace CursoEFCore
 
             foreach (var migracao in migracoesPendentes)
                 Console.WriteLine($"Migração: {migracao}");
+        }
+
+        static void AplicarMigracoesEmTempoDeExecucao()
+        {
+            using var db = new ApplicationContext();
+            db.Database.Migrate();
         }
     }
 }
