@@ -22,9 +22,11 @@ namespace CursoEFCore
             // _count = 0;
             // GerenciarEstadoDaConexao(true);
 
-            MigracoesPendentes();
+            // MigracoesPendentes();
 
-            AplicarMigracoesEmTempoDeExecucao();
+            // AplicarMigracoesEmTempoDeExecucao();
+
+            TodasMigracoes();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -118,6 +120,17 @@ namespace CursoEFCore
         {
             using var db = new ApplicationContext();
             db.Database.Migrate();
+        }
+
+        static void TodasMigracoes()
+        {
+            using var db = new ApplicationContext();
+
+            var migracoes = db.Database.GetMigrations();
+            Console.WriteLine($"Total: {migracoes.Count()}");
+
+            foreach (var migracao in migracoes)
+                Console.WriteLine($"Migração: {migracao}");
         }
     }
 }

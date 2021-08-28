@@ -15,9 +15,9 @@ namespace CursoEFCore.Data
             const string connectionString = "Data source=(localdb)\\mssqllocaldb; Initial Catalog=C002; Integrated Security=true;pooling=false";
 
             optionsBuilder
-                .UseSqlServer(connectionString);
-                // .EnableSensitiveDataLogging()
-                // .LogTo(Console.WriteLine, LogLevel.Information);
+                .UseSqlServer(connectionString)
+                .EnableSensitiveDataLogging()
+                .LogTo(Console.WriteLine, LogLevel.Information);
         }
     }
 }
