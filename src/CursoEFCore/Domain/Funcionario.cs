@@ -7,6 +7,8 @@ namespace CursoEFCore.Domain
         public string CPF { get; set; }
         public string RG { get; set; }
         public int DepatamentoId { get; set; }
-        public Departamento Departamento { get; set; }
+
+        // Virtual para LazyLoad
+        public virtual Departamento Departamento { get; set; }
     }
 }

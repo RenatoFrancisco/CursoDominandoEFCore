@@ -17,6 +17,7 @@ namespace CursoEFCore.Data
             optionsBuilder
                 .UseSqlServer(connectionString)
                 .EnableSensitiveDataLogging()
+                .UseLazyLoadingProxies()
                 .LogTo(Console.WriteLine, LogLevel.Information);
         }
     }

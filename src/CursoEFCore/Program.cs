@@ -36,7 +36,9 @@ namespace CursoEFCore
 
             // CarregamentoAdiantado();
 
-            CarregamentoExplicito();
+            // CarregamentoExplicito();
+
+            CarregamentoLento();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -215,6 +217,30 @@ namespace CursoEFCore
             }
         }
 
+        static void CarregamentoLento()
+        {
+            using var db = new ApplicationContext();
+            SetupTipoCarregamento(db);
+
+            // db.ChangeTracker.LazyLoadingEnabled = false;
+
+            var departamentos = db
+                .Departamentos
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine(new string('-', 50));
+                Console.WriteLine($"Departamento: {departamento.Descricao}");
+
+                if (departamento.Funcionarios?.Any() ?? false)
+                    foreach (var funcionario in departamento.Funcionarios)
+                        Console.WriteLine($"\tFuncionário: {funcionario.Nome}");
+                else
+                    Console.WriteLine($"\tNenhum funcionário encontrado!");
+            }
+        }
+
         private static void SetupTipoCarregamento(ApplicationContext db)
         {
             if (!db.Departamentos.Any())
@@ -259,5 +285,7 @@ namespace CursoEFCore
             }
 
         }
+
+
     }
 }
