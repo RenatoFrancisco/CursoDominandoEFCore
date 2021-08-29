@@ -34,7 +34,9 @@ namespace CursoEFCore
 
             // ScriptGeralBancoDeDados();
 
-            CarregamentoAdiantado();
+            // CarregamentoAdiantado();
+
+            CarregamentoExplicito();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -170,6 +172,38 @@ namespace CursoEFCore
 
             foreach (var departamento in departamentos)
             {
+                Console.WriteLine(new string('-', 50));
+                Console.WriteLine($"Departamento: {departamento.Descricao}");
+
+                if (departamento.Funcionarios?.Any() ?? false)
+                    foreach (var funcionario in departamento.Funcionarios)
+                        Console.WriteLine($"\tFuncionário: {funcionario.Nome}");
+                else
+                    Console.WriteLine($"\tNenhum funcionário encontrado!");
+            }
+        }
+
+        static void CarregamentoExplicito()
+        {
+            using var db = new ApplicationContext();
+            SetupTipoCarregamento(db);
+
+            var departamentos = db
+                .Departamentos
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                if (departamento.Id == 2)
+                {
+                    // db.Entry(departamento).Collection(p => p.Funcionarios).Load();
+                    db.Entry(departamento)
+                        .Collection(p => p.Funcionarios)
+                        .Query()
+                        .Where(p => p.Id > 2)
+                        .ToList();
+                }
+
                 Console.WriteLine(new string('-', 50));
                 Console.WriteLine($"Departamento: {departamento.Descricao}");
 
