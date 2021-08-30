@@ -9,8 +9,8 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            //ConsultaViaProcedure();
-            CriarStoredProcedureDeConsulta();
+            ConsultaViaProcedure();
+            // CriarStoredProcedureDeConsulta();
             // InserirDadosViaProcedure();
             // CriarStoredProcedure();
             //DivisaoDeConsulta();
