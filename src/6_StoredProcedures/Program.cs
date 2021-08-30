@@ -10,8 +10,8 @@ namespace DominandoEFCore
         static void Main(string[] args)
         {
             //ConsultaViaProcedure();
-           //CriarStoredProcedureDeConsulta();
-            InserirDadosViaProcedure();
+            CriarStoredProcedureDeConsulta();
+            // InserirDadosViaProcedure();
             // CriarStoredProcedure();
             //DivisaoDeConsulta();
             //EntendendoConsulta1NN1();
@@ -34,7 +34,7 @@ namespace DominandoEFCore
                 .FromSqlInterpolated($"EXECUTE GetDepartamentos {dep}")
                 .ToList();
 
-            foreach(var departamento in departamentos)
+            foreach (var departamento in departamentos)
             {
                 Console.WriteLine(departamento.Descricao);
             }
@@ -51,7 +51,7 @@ namespace DominandoEFCore
                 SELECT * FROM Departamentos Where Descricao Like @Descricao + '%'
             END        
             ";
-            
+
             using var db = new Curso.Data.ApplicationContext();
 
             db.Database.ExecuteSqlRaw(criarDepartamento);
@@ -78,7 +78,7 @@ namespace DominandoEFCore
                 VALUES (@Descricao, @Ativo, 0)
             END        
             ";
-            
+
             using var db = new Curso.Data.ApplicationContext();
 
             db.Database.ExecuteSqlRaw(criarDepartamento);
