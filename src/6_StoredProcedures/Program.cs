@@ -11,8 +11,8 @@ namespace DominandoEFCore
         {
             //ConsultaViaProcedure();
            //CriarStoredProcedureDeConsulta();
-            //InserirDadosViaProcedure();
-            CriarStoredProcedure();
+            InserirDadosViaProcedure();
+            // CriarStoredProcedure();
             //DivisaoDeConsulta();
             //EntendendoConsulta1NN1();
             //ConsultaComTAG();
