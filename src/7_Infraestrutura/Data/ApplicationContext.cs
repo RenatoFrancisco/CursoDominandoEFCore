@@ -15,9 +15,9 @@ namespace Curso.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            const string strConnection="Data source=(localdb)\\mssqllocaldb; Initial Catalog=DevIO-02;Integrated Security=true;pooling=true;";
+            const string strConnection="Data source=(localdb)\\mssqllocaldb; Initial Catalog=DevIO-03;Integrated Security=true;pooling=true;";
             optionsBuilder
-                .UseSqlServer(strConnection)
+                .UseSqlServer(strConnection, o => o.MaxBatchSize(100))
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 // .LogTo(Console.WriteLine, new [] { CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted }, 
                 //     LogLevel.Information,
