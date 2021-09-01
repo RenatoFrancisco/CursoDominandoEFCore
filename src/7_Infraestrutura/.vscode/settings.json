@@ -4,5 +4,5 @@
         "**/bin": true,
         "**/obj": true
     },
-    "workspace.isHidden": false
+    "workspace.isHidden": true
 }
