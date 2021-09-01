@@ -1,6 +1,7 @@
 using System;
 using Curso.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 
 namespace Curso.Data
@@ -15,7 +16,10 @@ namespace Curso.Data
             const string strConnection="Data source=(localdb)\\mssqllocaldb; Initial Catalog=DevIO-02;Integrated Security=true;pooling=true;";
             optionsBuilder
                 .UseSqlServer(strConnection)
-                .LogTo(Console.WriteLine, LogLevel.Information);
+                // .LogTo(Console.WriteLine, LogLevel.Information);
+                .LogTo(Console.WriteLine, new [] { CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted }, 
+                    LogLevel.Information,
+                    DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine);
         }
     }
 }
