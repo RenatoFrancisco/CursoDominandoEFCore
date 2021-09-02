@@ -17,7 +17,10 @@ namespace Curso.Data
         {
             const string strConnection="Data source=(localdb)\\mssqllocaldb; Initial Catalog=DevIO-03;Integrated Security=true;pooling=true;";
             optionsBuilder
-                .UseSqlServer(strConnection, o => o.MaxBatchSize(100).CommandTimeout(5))
+                .UseSqlServer(strConnection, o => o
+                    .MaxBatchSize(100)
+                    .CommandTimeout(5)
+                    .EnableRetryOnFailure(4, TimeSpan.FromSeconds(10), null))
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 // .LogTo(Console.WriteLine, new [] { CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted }, 
                 //     LogLevel.Information,
