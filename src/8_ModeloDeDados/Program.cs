@@ -8,12 +8,13 @@ namespace DominandoEFCore
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
             // Collations();
             // PropagarDados();
-
-            Esquema();
+            // Esquema();
+            ConversorDeValor();
         }
 
         static void Collations()
@@ -40,5 +41,7 @@ namespace DominandoEFCore
             var script = db.Database.GenerateCreateScript();
             Console.WriteLine(script);
         }
+
+        static void ConversorDeValor() => Esquema();
     }
 }
