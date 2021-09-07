@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Curso.Data;
+using Curso.Domain;
 
 namespace DominandoEFCore
 {
@@ -15,7 +16,8 @@ namespace DominandoEFCore
             // PropagarDados();
             // Esquema();
             // ConversorDeValor();
-            ConversorCustomizado();
+            // ConversorCustomizado();
+            TrabalhandoComPropriedadeDeSombra();
         }
 
         static void Collations()
@@ -51,11 +53,31 @@ namespace DominandoEFCore
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
 
-            db.Conversores.Add(new Curso.Domain.Conversor { Status = Curso.Domain.Status.Devolvido });
+            db.Conversores.Add(new Conversor { Status = Status.Devolvido });
             db.SaveChanges();
 
-            var conversorEmAnalise = db.Conversores.AsNoTracking().FirstOrDefault(p => p.Status == Curso.Domain.Status.Analise);
-            var conversorDevolvido = db.Conversores.AsNoTracking().FirstOrDefault(p => p.Status == Curso.Domain.Status.Devolvido);
+            var conversorEmAnalise = db.Conversores.AsNoTracking().FirstOrDefault(p => p.Status == Status.Analise);
+            var conversorDevolvido = db.Conversores.AsNoTracking().FirstOrDefault(p => p.Status == Status.Devolvido);
+        }
+
+        static void TrabalhandoComPropriedadeDeSombra()
+        {
+            using var db = new ApplicationContext();
+            // db.Database.EnsureDeleted();
+            // db.Database.EnsureCreated();
+
+            // var departamento = new Departamento
+            // {
+            //     Descricao = "Departamento Propriedade de Sombra"
+            // };
+
+            // db.Departamentos.Add(departamento);
+
+            // db.Entry(departamento).Property("UltimaAtualizacao").CurrentValue = DateTime.Now;
+
+            // db.SaveChanges();
+
+            var departamento = db.Departamentos.Where(p => EF.Property<DateTime>(p, "UltimaAtualizacao") < DateTime.Now).ToArray();
         }
     }
 }
