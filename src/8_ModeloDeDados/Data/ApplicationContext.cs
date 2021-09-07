@@ -74,6 +74,10 @@ namespace Curso.Data
                 // .HasConversion(conversao);
                 // .HasConversion(p => p.ToString(), p => (Versao)Enum.Parse(typeof(Versao), p));
                 // .HasConversion<string>();
+
+            modelBuilder.Entity<Conversor>()
+                .Property(p => p.Status)
+                .HasConversion(new Curso.Conversores.ConversorCustomizado());
         }
     }
 }
