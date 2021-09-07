@@ -14,6 +14,7 @@ namespace Curso.Data
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Conversor> Conversores { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -65,21 +66,32 @@ namespace Curso.Data
             // modelBuilder.HasDefaultSchema("cadastros");
             // modelBuilder.Entity<Estado>().ToTable("Estados", "SegundoEsquema");
 
-            var conversao = new ValueConverter<Versao, string>(p => p.ToString(), p => (Versao)Enum.Parse(typeof(Versao), p));
-            var conversao1 = new EnumToStringConverter<Versao>();
+            // var conversao = new ValueConverter<Versao, string>(p => p.ToString(), p => (Versao)Enum.Parse(typeof(Versao), p));
+            // var conversao1 = new EnumToStringConverter<Versao>();
 
-            modelBuilder.Entity<Conversor>()
-                .Property(p =>  p.Versao)
-                .HasConversion(conversao1);
-                // .HasConversion(conversao);
-                // .HasConversion(p => p.ToString(), p => (Versao)Enum.Parse(typeof(Versao), p));
-                // .HasConversion<string>();
+            // modelBuilder.Entity<Conversor>()
+            //     .Property(p =>  p.Versao)
+            //     .HasConversion(conversao1);
+            //     // .HasConversion(conversao);
+            //     // .HasConversion(p => p.ToString(), p => (Versao)Enum.Parse(typeof(Versao), p));
+            //     // .HasConversion<string>();
 
-            modelBuilder.Entity<Conversor>()
-                .Property(p => p.Status)
-                .HasConversion(new Curso.Conversores.ConversorCustomizado());
+            // modelBuilder.Entity<Conversor>()
+            //     .Property(p => p.Status)
+            //     .HasConversion(new Curso.Conversores.ConversorCustomizado());
 
-            modelBuilder.Entity<Departamento>().Property<DateTime>("UltimaAtualizacao");
+            // modelBuilder.Entity<Departamento>().Property<DateTime>("UltimaAtualizacao");
+
+            modelBuilder.Entity<Cliente>(p =>
+            {
+                p.OwnsOne(x => x.Endereco, end =>
+                {
+                    end.Property(p => p.Bairro).HasColumnName("Bairro");
+
+                    // Se quiser criar uma tabela específica para endereço
+                    end.ToTable("Enderecos");
+                });
+            });
         }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Curso.Data;
 using Curso.Domain;
+using System.Text.Json;
 
 namespace DominandoEFCore
 {
@@ -17,7 +18,8 @@ namespace DominandoEFCore
             // Esquema();
             // ConversorDeValor();
             // ConversorCustomizado();
-            TrabalhandoComPropriedadeDeSombra();
+            // TrabalhandoComPropriedadeDeSombra();
+            TiposDePropriedades();
         }
 
         static void Collations()
@@ -78,6 +80,32 @@ namespace DominandoEFCore
             // db.SaveChanges();
 
             var departamento = db.Departamentos.Where(p => EF.Property<DateTime>(p, "UltimaAtualizacao") < DateTime.Now).ToArray();
+        }
+
+        static void TiposDePropriedades()
+        {
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            var cliente = new Cliente
+            {
+                Nome = "Fulano de Tal",
+                Telefone = "(79) 98888-7777",
+                Endereco = new Endereco { Bairro = "Centro", Cidade = "São Paulo" }
+            };
+
+            db.Clientes.Add(cliente);
+            db.SaveChanges();
+
+            var clientes = db.Clientes.AsNoTracking().ToList();
+            var options = new JsonSerializerOptions { WriteIndented = true };
+
+            clientes.ForEach(c => 
+            {
+                var json = JsonSerializer.Serialize(c, options);
+                Console.WriteLine(json);
+            });
         }
     }
 }
