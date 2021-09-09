@@ -82,16 +82,7 @@ namespace Curso.Data
 
             // modelBuilder.Entity<Departamento>().Property<DateTime>("UltimaAtualizacao");
 
-            modelBuilder.Entity<Cliente>(p =>
-            {
-                p.OwnsOne(x => x.Endereco, end =>
-                {
-                    end.Property(p => p.Bairro).HasColumnName("Bairro");
-
-                    // Se quiser criar uma tabela específica para endereço
-                    end.ToTable("Enderecos");
-                });
-            });
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
         }
     }
 }
