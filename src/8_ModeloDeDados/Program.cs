@@ -20,7 +20,8 @@ namespace DominandoEFCore
             // ConversorCustomizado();
             // TrabalhandoComPropriedadeDeSombra();
             // TiposDePropriedades();
-            Relacionamento1Para1();
+            // Relacionamento1Para1();
+            Relacionamento1ParaMuitos();
         }
 
         static void Collations()
@@ -102,7 +103,7 @@ namespace DominandoEFCore
             var clientes = db.Clientes.AsNoTracking().ToList();
             var options = new JsonSerializerOptions { WriteIndented = true };
 
-            clientes.ForEach(c => 
+            clientes.ForEach(c =>
             {
                 var json = JsonSerializer.Serialize(c, options);
                 Console.WriteLine(json);
@@ -127,6 +128,40 @@ namespace DominandoEFCore
             var estados = db.Estados.AsNoTracking().ToList();
 
             estados.ForEach(e => Console.WriteLine($"Estado: {e.Nome}, Governador: {e.Governador.Nome}"));
+        }
+
+        static void Relacionamento1ParaMuitos()
+        {
+            using (var db = new ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                var estado = new Estado
+                {
+                    Nome = "Sergipe",
+                    Governador = new Governador { Nome = "Rafael de Almeida" }
+                };
+
+                estado.Cidades.Add(new Cidade { Nome = "Itabaiana" });
+                db.Estados.Add(estado);
+                db.SaveChanges();
+            }
+
+            using (var db = new ApplicationContext())
+            {
+                var estados = db.Estados.ToList();
+                estados[0].Cidades.Add(new Cidade { Nome = "Aracaju" });
+                db.SaveChanges();
+
+                foreach (var est in db.Estados.Include(e => e.Cidades).AsNoTracking())
+                {
+                    Console.WriteLine($"Estado: {est.Nome}, Governador: {est.Governador.Nome}");
+
+                    foreach (var cidade in est.Cidades)
+                        Console.WriteLine($"\t Cidade: {cidade.Nome}");
+                }
+            }
         }
     }
 }
