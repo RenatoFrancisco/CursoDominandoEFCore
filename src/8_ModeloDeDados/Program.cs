@@ -21,7 +21,8 @@ namespace DominandoEFCore
             // TrabalhandoComPropriedadeDeSombra();
             // TiposDePropriedades();
             // Relacionamento1Para1();
-            Relacionamento1ParaMuitos();
+            // Relacionamento1ParaMuitos();
+            RelacionamentoMuitosParaMuitos();
         }
 
         static void Collations()
@@ -160,6 +161,45 @@ namespace DominandoEFCore
 
                     foreach (var cidade in est.Cidades)
                         Console.WriteLine($"\t Cidade: {cidade.Nome}");
+                }
+            }
+        }
+
+        static void RelacionamentoMuitosParaMuitos()
+        {
+            using (var db = new ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+
+                var ator1 = new Ator { Nome = "Rafael" };
+                var ator2 = new Ator { Nome = "Renato" };
+                var ator3 = new Ator { Nome = "Bruno" };
+
+                var filme1 = new Filme { Descricao = "A volta dos que não foram" };
+                var filme2 = new Filme { Descricao = "De volta para o futuro" };
+                var filme3 = new Filme { Descricao = "Poeira em altor mar" };
+
+                ator1.Filmes.Add(filme1);
+                ator1.Filmes.Add(filme2);
+
+                ator2.Filmes.Add(filme1);
+
+                filme3.Atores.Add(ator1);
+                filme3.Atores.Add(ator2);
+                filme3.Atores.Add(ator3);
+
+                db.AddRange(ator1, ator2, ator3);
+
+                db.SaveChanges();
+
+                foreach (var ator in db.Atores.Include(a => a.Filmes))
+                {
+                    Console.WriteLine($"Ator: {ator.Nome}");
+
+                    foreach (var filme in ator.Filmes)
+                        Console.WriteLine($"\tFilme: {filme.Descricao}");
                 }
             }
         }
