@@ -190,7 +190,7 @@ namespace DominandoEFCore
                 filme3.Atores.Add(ator2);
                 filme3.Atores.Add(ator3);
 
-                db.AddRange(ator1, ator2, ator3);
+                db.AddRange(ator1, ator2, filme3);
 
                 db.SaveChanges();
 
