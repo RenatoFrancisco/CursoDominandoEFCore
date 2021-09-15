@@ -19,6 +19,8 @@ namespace Curso.Data
         public DbSet<Ator> Atores { get; set; }
         public DbSet<Filme> Filmes { get; set; }
 
+        public DbSet<Documento> Documentos { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             const string strConnection="Data source=(localdb)\\mssqllocaldb; Initial Catalog=DevIO05;Integrated Security=true;pooling=true;";
