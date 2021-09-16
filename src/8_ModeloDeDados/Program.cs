@@ -252,5 +252,29 @@ namespace DominandoEFCore
             foreach (var a in alunos)
                 Console.WriteLine($"Id: {a.Id} --> {a.Nome}; Idade: {a.Idade}; Data do contrato: {a.DataContrato}");
         }
+
+        static void PacotesDePropriedades()
+        {
+            using var db = new ApplicationContext();
+            db.EnsureDeleted();
+            db.EmsureCreated();
+
+            var configuracao = new Dictionary<string, object>
+            {
+                ["Chave"] = "SenhaBancoDeDados",
+                ["Valor"] = Guid.NewGuid().ToString()
+            };
+
+            db.Configuracoes.Add(configuracao);
+
+            var configuracao = db
+                .Configuracoes
+                .AsNoTracking()
+                .Where(p => p["Chave"] == "SenhaBancoDeDados")
+                .ToArray();
+
+            foreach (var dic in configuracoes)
+                Console.WriteLine($"Chave: {dic["Chave"]} - Valor: {dic["valor"]}");
+        }
     }
 }

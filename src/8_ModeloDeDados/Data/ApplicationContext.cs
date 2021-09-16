@@ -25,6 +25,9 @@ namespace Curso.Data
         public DbSet<Instrutor> Instrutores { get; set; }
         public DbSet<Aluno> Alunos { get; set; }
 
+        public DbSet<Dictionary<string, object>> Configuracoes => Set<Dictionary<string, object>>("Configuracoes");
+        
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             const string strConnection="Data source=(localdb)\\mssqllocaldb; Initial Catalog=DevIO05;Integrated Security=true;pooling=true;";
@@ -92,6 +95,19 @@ namespace Curso.Data
             // modelBuilder.Entity<Departamento>().Property<DateTime>("UltimaAtualizacao");
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
+
+            modelBuilder.SharedTypeEntity<Dictionary<string, object>>("Configuracoes", b => 
+            {
+                b.Property<int>("Id");
+
+                b.Property<string>("Chave")
+                    .HasColumnType("varchar(40)")
+                    .IsRequired();
+
+                b.Property<string>("Valor")
+                    .HasColumnType("varchar(255)")
+                    .IsRequired();
+            });
         }
     }
 }
