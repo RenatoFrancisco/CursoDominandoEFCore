@@ -24,7 +24,8 @@ namespace DominandoEFCore
             // Relacionamento1ParaMuitos();
             // RelacionamentoMuitosParaMuitos();
             // CampoDeApoio();
-            ExemploTPH();
+            // ExemploTPH();
+            // PacotesDePropriedades();
         }
 
         static void Collations()
@@ -275,6 +276,14 @@ namespace DominandoEFCore
 
             foreach (var dic in configuracoes)
                 Console.WriteLine($"Chave: {dic["Chave"]} - Valor: {dic["valor"]}");
-        }
+       }
+
+       static void Atributos()
+       {
+           using var db = new ApplicationContext();
+           var script = db.Database.GenerateCreateScript();
+
+           Console.WriteLine(script);
+       }
     }
 }
