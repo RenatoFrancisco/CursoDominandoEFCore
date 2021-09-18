@@ -1,6 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Curso.Domain
 {
     [Table("TabelaAtributos")]
+    [Index(nameof(Descricao), nameof(Id), IsUnique = false)]
     public class Atributo
     {
         [Key]
@@ -21,7 +24,7 @@ namespace Curso.Domain
 
         [NotMapped]
         public string PropriedadeTeste { get; set; }
-        
+
         [InverseProperty("AeroportoPartida")]
         public ICollection<Voo> VoosDePartida { get; set; }
 
