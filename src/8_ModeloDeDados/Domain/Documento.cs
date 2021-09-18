@@ -16,6 +16,7 @@ namespace Curso.Domain
             _cpf =  cpf;
         }
 
+        [BackingField(nameof(_cpf))]
         public string GetCPF() => _cpf;
     }
 }
