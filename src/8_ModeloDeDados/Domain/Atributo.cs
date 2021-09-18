@@ -42,4 +42,12 @@ namespace Curso.Domain
         public Aeroporto AeroportoPartida { get; set; }
         public Aeroporto AeroportoChegada { get; set; }
     }
+
+    [Keyless]
+    public class RelatorioFinanceiro
+    {
+        public string Descricao { get; set; }
+        public decimal Total { get; set; }
+        public DateTime Data { get; set; }
+    }
 }
