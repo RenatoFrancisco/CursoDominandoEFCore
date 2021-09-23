@@ -12,8 +12,9 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            FuncoesDeDatas();
-            FuncaoLike();
+            // FuncoesDeDatas();
+            // FuncaoLike();
+            FuncaoDataLength()
         }
 
         static void FuncoesDeDatas()
@@ -66,6 +67,30 @@ namespace DominandoEFCore
                 }
             }
         }
+
+        static void FuncaoDataLength()
+        {
+            using (var db = new Curso.Data.ApplicationContext())
+            {
+                var resultado = db
+                    .Funcoes
+                    .AsNoTracking()
+                    .Select(p => new 
+                    {
+                        TotalBytesCampoData = EF.Functions.DataLength(p.Data1),
+                        TotalBytes1 = EF.Functions.DataLength(p.Descricao1),
+                        TotalBytes2 = EF.Functions.DataLength(p.Descricao2),
+                        Total1 = p.Descricao1.Length,
+                        Total2 = p.Descricao2.Length
+                    })
+                    .FirstOrDefault();
+
+                Console.WriteLine("Resultado:"); 
+
+                Console.WriteLine(resultado); 
+            }
+        }
+
 
         static void ApagarCriarBancoDeDados()
         {
