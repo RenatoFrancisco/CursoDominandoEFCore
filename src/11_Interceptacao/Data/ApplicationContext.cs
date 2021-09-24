@@ -20,6 +20,7 @@ namespace Curso.Data
                 .EnableSensitiveDataLogging()
                 .AddInterceptors(new Interceptadores.InterceptadorDeComandos())
                 .AddInterceptors(new Interceptadores.InterceptadorDeConexao())
+                .AddInterceptors(new Interceptadores.InterceptadorPersistencia());
         }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
