@@ -15,10 +15,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            //ComportamentoPadrao();
-            //GerenciandoTransacaoManualmente();
-            //ReverterTransacao();
-            TransactionScope();
+            FuncaoLEFT();
         }    
 
         static void FuncaoLEFT()
