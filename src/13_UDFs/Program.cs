@@ -1,74 +1,71 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Transactions;
+using System.Reflection;
 using Curso.Domain;
-using Microsoft.Data.SqlClient;
+using Curso.Funcoes;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.Extensions.Logging;
 
-namespace DominandoEFCore
+namespace Curso.Data
 {
-    class Program
+    public class ApplicationContext : DbContext
     {
-        static void Main(string[] args)
+        public DbSet<Livro> Livros {get;set;}
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            FuncaoLEFT();
-        }    
+            const string strConnection = "Data source=(localdb)\\mssqllocaldb; Initial Catalog=DevIO-02;Integrated Security=true;pooling=true;";
 
-        static void FuncaoLEFT()
-        {
-            CadastrarLivro();
-
-            using var db = new Curso.Data.ApplicationContext(); 
-
-            var resultado = db.Livros.Select(p=> Curso.Funcoes.MinhasFuncoes.Left(p.Titulo, 10));
-            foreach(var parteTitulo in resultado)
-            {
-                Console.WriteLine(parteTitulo);
-            }
+            optionsBuilder
+                .UseSqlServer(strConnection)
+                .LogTo(Console.WriteLine, LogLevel.Information)
+                .EnableSensitiveDataLogging();
         }
 
-        static void FuncaoDefinidaPeloUsuario()
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            CadastrarLivro();
+            //Curso.Funcoes.MinhasFuncoes.RegistarFuncoes(modelBuilder);
 
-            using var db = new Curso.Data.ApplicationContext(); 
+            modelBuilder
+                .HasDbFunction(_minhaFuncao)
+                .HasName("LEFT")
+                .IsBuiltIn();
 
-            db.Database.ExecuteSqlRaw(@"
-                CREATE FUNCTION ConverterParaLetrasMaiusculas(@dados VARCHAR(100))
-                RETURNS VARCHAR(100)
-                BEGIN
-                    RETURN UPPER(@dados)
-                END");
+            modelBuilder
+                .HasDbFunction(_letrasMaiusculas)
+                .HasName("ConverterParaLetrasMaiusculas")
+                .HasSchema("dbo");
 
+            modelBuilder
+                .HasDbFunction(_dateDiff)
+                .HasName("DATEDIFF")
+                .HasTranslation(p=> 
+                {
+                    var argumentos = p.ToList();
 
-            var resultado = db.Livros.Select(p=> Curso.Funcoes.MinhasFuncoes.LetrasMaiusculas(p.Titulo));
-            foreach(var parteTitulo in resultado)
-            {
-                Console.WriteLine(parteTitulo);
-            }
+                    var contante = (SqlConstantExpression)argumentos[0];
+                    argumentos[0] = new SqlFragmentExpression(contante.Value.ToString());
+
+                    return new SqlFunctionExpression("DATEDIFF", argumentos, false, new[]{false, false, false}, typeof(int), null);
+
+                })
+                .IsBuiltIn();
         }
-         
-        static void CadastrarLivro()
+
+        private static MethodInfo _minhaFuncao = typeof(MinhasFuncoes)
+                    .GetRuntimeMethod("Left", new[] {typeof(string), typeof(int)});
+
+        private static MethodInfo _letrasMaiusculas = typeof(MinhasFuncoes)
+                    .GetRuntimeMethod(nameof(MinhasFuncoes.LetrasMaiusculas), new[] {typeof(string)});
+
+        private static MethodInfo _dateDiff = typeof(MinhasFuncoes)
+                    .GetRuntimeMethod(nameof(MinhasFuncoes.DateDiff), new[] {typeof(string), typeof(DateTime), typeof(DateTime)});
+        /*
+        [DbFunction(name: "LEFT", IsBuiltIn = true)]
+        public static string Left(string dados, int quantidade)
         {
-            using (var db = new Curso.Data.ApplicationContext())
-            {
-                db.Database.EnsureDeleted();
-                db.Database.EnsureCreated();
-
-                db.Livros.Add(
-                    new Livro
-                    {
-                        Titulo = "Introdução ao Entity Framework Core",
-                        Autor = "Rafael",
-                        CadastradoEm = DateTime.Now.AddDays(-1)
-                    }); 
-
-                db.SaveChanges();
-            }
-        }
+            throw new NotImplementedException();
+        }*/
     }
 }
