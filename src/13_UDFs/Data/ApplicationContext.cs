@@ -26,11 +26,15 @@ namespace Curso.Data
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        {   
             modelBuilder
                 .HasDbFunction(_minhaFuncao)
                 .HasName("LEFT")
                 .IsBuiltIn();
         }
+
+        private static MethodInfo _minhaFuncao = typeof(MinhasFuncoes)
+            .GetRuntimeMethod("Left", new[] {typeof(string), typeof(int)});
+
     }
 }
