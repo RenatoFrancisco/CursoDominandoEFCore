@@ -30,6 +30,27 @@ namespace DominandoEFCore
                 Console.WriteLine(parteTitulo);
             }
         }
+
+        static void FuncaoDefinidaPeloUsuario()
+        {
+            CadastrarLivro();
+
+            using var db = new Curso.Data.ApplicationContext(); 
+
+            db.Database.ExecuteSqlRaw(@"
+                CREATE FUNCTION ConverterParaLetrasMaiusculas(@dados VARCHAR(100))
+                RETURNS VARCHAR(100)
+                BEGIN
+                    RETURN UPPER(@dados)
+                END");
+
+
+            var resultado = db.Livros.Select(p=> Curso.Funcoes.MinhasFuncoes.LetrasMaiusculas(p.Titulo));
+            foreach(var parteTitulo in resultado)
+            {
+                Console.WriteLine(parteTitulo);
+            }
+        }
          
         static void CadastrarLivro()
         {
