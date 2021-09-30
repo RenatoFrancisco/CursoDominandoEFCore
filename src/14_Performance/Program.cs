@@ -56,7 +56,7 @@ namespace DominandoEFCore
             db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
             
             var funcionarios = db.Funcionarios
-                //.AsNoTrackingWithIdentityResolution()
+                .AsNoTrackingWithIdentityResolution()
                 .Include(p => p.Departamento)
                 .ToList();
         }
