@@ -11,8 +11,16 @@ namespace EFCore
         {
             using var db = new ApplicationContext();
 
+            db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
-            var pessoas = db.Pessoas.ToList();
+
+            db.Pessoas.Add(new Curso.Domain.Pessoa
+            {
+                Nome = "Teste",
+                Telefone = "999999"
+            });
+
+            db.Pessoas.ToList();
             
             Console.WriteLine("Hello World!");
         }

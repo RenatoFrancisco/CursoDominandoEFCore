@@ -15,7 +15,8 @@ namespace Curso.Data
             const string connectionString = "Host=localhost;Database=DEVIO04;Username=postgres;Password=123";
 
             optionsBuilder
-                .UseNpgsql(connectionString)
+                // .UseNpgsql(connectionString)
+                .UseSqlite("Data source=devio04.db")
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging();
         }
