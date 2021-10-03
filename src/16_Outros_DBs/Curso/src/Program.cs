@@ -20,9 +20,11 @@ namespace EFCore
                 Telefone = "999999"
             });
 
-            db.Pessoas.ToList();
-            
-            Console.WriteLine("Hello World!");
+            db.SaveChanges();
+
+            var pessoas = db.Pessoas.ToList();
+            foreach (var pessoa in pessoas)
+                Console.WriteLine($"Nome {pessoa.Nome}");
         }
     }
 }

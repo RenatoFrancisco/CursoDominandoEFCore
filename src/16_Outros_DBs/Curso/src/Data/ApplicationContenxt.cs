@@ -16,7 +16,8 @@ namespace Curso.Data
 
             optionsBuilder
                 // .UseNpgsql(connectionString)
-                .UseSqlite("Data source=devio04.db")
+                // .UseSqlite("Data source=devio04.db")
+                .UseInMemoryDatabase(databaseName: "teste-devio")
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging();
         }
