@@ -11,6 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Multitenant.Data;
+using Microsoft.EntityFrameworkCore;
+using Multitenant.Domain;
 
 namespace EFCore.Multitenant
 {
@@ -32,6 +35,13 @@ namespace EFCore.Multitenant
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EFCore.Multitenant", Version = "v1" });
             });
+
+            services.AddDbContext<ApplicationContext>(x => 
+            {
+                x.UseNpgsql("Host=localhost;Database=Tenant99;Username=postgres;Password=123");
+                x.LogTo(Console.WriteLine);
+                x.EnableSensitiveDataLogging();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +54,8 @@ namespace EFCore.Multitenant
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EFCore.Multitenant v1"));
             }
 
+            DatabaseInitialize(app);
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -54,6 +66,25 @@ namespace EFCore.Multitenant
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void DatabaseInitialize(IApplicationBuilder app)
+        {
+            using var db = app.ApplicationServices
+                .CreateScope()
+                .ServiceProvider
+                .GetRequiredService<ApplicationContext>();
+
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            for (var i = 0; i < 5; i++)
+            {
+                db.People.Add(new Person { Name = $"Person {i}" });
+                db.Products.Add(new Product { Description = $"Product {i}" });                
+            }
+
+            db.SaveChanges();
         }
     }
 }
