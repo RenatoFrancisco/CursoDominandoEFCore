@@ -8,12 +8,12 @@ using Multitenant.Domain;
 namespace EFCore.Multitenant.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class PersonsController : ControllerBase
+    [Route("{tenant}/[controller]")]
+    public class PeopleController : ControllerBase
     {
-        private readonly ILogger<PersonsController> _logger;
+        private readonly ILogger<PeopleController> _logger;
 
-        public PersonsController(ILogger<PersonsController> logger)
+        public PeopleController(ILogger<PeopleController> logger)
         {
             _logger = logger;
         }

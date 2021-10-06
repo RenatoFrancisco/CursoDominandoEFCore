@@ -8,7 +8,7 @@ using Multitenant.Domain;
 namespace EFCore.Multitenant.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("{tenant}/[controller]")]
     public class ProductsController : ControllerBase
     {
         private readonly ILogger<ProductsController> _logger;
