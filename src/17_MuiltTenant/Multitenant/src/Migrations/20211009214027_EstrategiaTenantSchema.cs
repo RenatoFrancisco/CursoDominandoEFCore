@@ -3,12 +3,16 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EFCore.Multitenant.Migrations
 {
-    public partial class Tenant01 : Migration
+    public partial class EstrategiaTenantSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "dbo");
+
             migrationBuilder.CreateTable(
                 name: "People",
+                schema: "dbo",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -23,6 +27,7 @@ namespace EFCore.Multitenant.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Products",
+                schema: "dbo",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -36,33 +41,37 @@ namespace EFCore.Multitenant.Migrations
                 });
 
             migrationBuilder.InsertData(
+                schema: "dbo",
                 table: "People",
                 columns: new[] { "Id", "Name", "TenantId" },
                 values: new object[,]
                 {
-                    { 1, "Person 1", "Teanant 1" },
-                    { 2, "Person 2", "Teanant 2" },
-                    { 3, "Person 3", "Teanant 3" }
+                    { 1, "Person 1", "Tenant-1" },
+                    { 2, "Person 2", "Tenant-2" },
+                    { 3, "Person 3", "Tenant-3" }
                 });
 
             migrationBuilder.InsertData(
+                schema: "dbo",
                 table: "Products",
                 columns: new[] { "Id", "Description", "TenantId" },
                 values: new object[,]
                 {
-                    { 1, "Description 1", "Teanant 1" },
-                    { 2, "Description 2", "Teanant 2" },
-                    { 3, "Description 3", "Teanant 3" }
+                    { 1, "Description 1", "Tenant-1" },
+                    { 2, "Description 2", "Tenant-2" },
+                    { 3, "Description 3", "Tenant-3" }
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "People");
+                name: "People",
+                schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Products",
+                schema: "dbo");
         }
     }
 }

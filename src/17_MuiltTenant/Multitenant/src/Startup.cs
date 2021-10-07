@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Multitenant.Domain;
 using Multitenant.Provider;
 using Multitenant.Middlewares;
+using EFCore.Multitenant.Interceptors;
 
 namespace EFCore.Multitenant
 {
@@ -32,6 +33,7 @@ namespace EFCore.Multitenant
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<TenantData>();
+            services.AddScoped<StrategySchemaInterceptor>();
             
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -39,11 +41,14 @@ namespace EFCore.Multitenant
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EFCore.Multitenant", Version = "v1" });
             });
 
-            services.AddDbContext<ApplicationContext>(x => 
+            services.AddDbContext<ApplicationContext>((provider, options) => 
             {
-                x.UseNpgsql("Host=localhost;Database=Tenant101;Username=postgres;Password=123");
-                x.LogTo(Console.WriteLine);
-                x.EnableSensitiveDataLogging();
+                options.UseNpgsql("Host=localhost;Database=Tenant101;Username=postgres;Password=123");
+                options.LogTo(Console.WriteLine);
+                options.EnableSensitiveDataLogging();
+
+                var interceptor = provider.GetRequiredService<StrategySchemaInterceptor>();
+                options.AddInterceptors(interceptor);
             });
         }
 

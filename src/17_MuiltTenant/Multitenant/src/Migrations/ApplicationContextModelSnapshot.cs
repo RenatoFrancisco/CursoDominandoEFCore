@@ -14,6 +14,7 @@ namespace EFCore.Multitenant.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("dbo")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -40,19 +41,19 @@ namespace EFCore.Multitenant.Migrations
                         {
                             Id = 1,
                             Name = "Person 1",
-                            TenantId = "Teanant 1"
+                            TenantId = "Tenant-1"
                         },
                         new
                         {
                             Id = 2,
                             Name = "Person 2",
-                            TenantId = "Teanant 2"
+                            TenantId = "Tenant-2"
                         },
                         new
                         {
                             Id = 3,
                             Name = "Person 3",
-                            TenantId = "Teanant 3"
+                            TenantId = "Tenant-3"
                         });
                 });
 
@@ -78,19 +79,19 @@ namespace EFCore.Multitenant.Migrations
                         {
                             Id = 1,
                             Description = "Description 1",
-                            TenantId = "Teanant 1"
+                            TenantId = "Tenant-1"
                         },
                         new
                         {
                             Id = 2,
                             Description = "Description 2",
-                            TenantId = "Teanant 2"
+                            TenantId = "Tenant-2"
                         },
                         new
                         {
                             Id = 3,
                             Description = "Description 3",
-                            TenantId = "Teanant 3"
+                            TenantId = "Tenant-3"
                         });
                 });
 #pragma warning restore 612, 618
