@@ -13,6 +13,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using src.Data;
 using Microsoft.EntityFrameworkCore;
+using src.Domain;
+using src.Data.Repositories;
 
 namespace EFCore.UowRepsitory
 {
@@ -28,7 +30,10 @@ namespace EFCore.UowRepsitory
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+                    
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EFCore.UowRepsitory", Version = "v1" });
@@ -40,6 +45,8 @@ namespace EFCore.UowRepsitory
                 options.LogTo(Console.WriteLine);
                 options.EnableSensitiveDataLogging();
             });
+
+            services.AddScoped<IDepartamentoRepository, DepartamentoRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -61,6 +68,33 @@ namespace EFCore.UowRepsitory
             {
                 endpoints.MapControllers();
             });
+
+            InicializarBaseDeDados(app);
+        }
+
+        public void InicializarBaseDeDados(IApplicationBuilder app)
+        {
+            using var db = app
+                .ApplicationServices
+                .CreateScope()
+                .ServiceProvider
+                .GetRequiredService<ApplicationContext>();
+
+            if (db.Database.EnsureCreated())
+            {
+                db.Departamentos.AddRange(Enumerable.Range(1, 20)
+                    .Select(d => new Departamento
+                    {
+                        Descricao = $"Departamento - {d}",
+                        Colaboradores = Enumerable.Range(1, 10)
+                            .Select(c => new Colaborador
+                            {
+                                Nome = $"Colaborador: {c}/{d}"
+                            }).ToList()
+                    }));
+
+                db.SaveChanges();
+            }
         }
     }
 }
