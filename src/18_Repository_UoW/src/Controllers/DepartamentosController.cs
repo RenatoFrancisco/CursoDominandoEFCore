@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using src.Data;
 using src.Data.Repositories;
 using src.Domain;
 
@@ -15,11 +16,16 @@ namespace EFCore.UowRepsitory.Controllers
     {
         private readonly ILogger<DepartamentosController> _logger;
         private readonly IDepartamentoRepository _departamentoRepository;
+        private readonly IUnitOfWork _uow;
+
+
         public DepartamentosController(ILogger<DepartamentosController> logger,
-                                       IDepartamentoRepository departamentoRepository)
+                                       IDepartamentoRepository departamentoRepository,
+                                       IUnitOfWork uow)
         {
             _logger = logger;
             _departamentoRepository = departamentoRepository;
+            _uow = uow;
         }
 
         [HttpGet("{id:int}")]
@@ -34,7 +40,8 @@ namespace EFCore.UowRepsitory.Controllers
         public ActionResult CreateDepartamento(Departamento departamento)
         {
             _departamentoRepository.Add(departamento);
-            var saved = _departamentoRepository.Save();
+            // var saved = _departamentoRepository.Save();
+            _uow.Commit();
 
             return Ok(departamento);
         }

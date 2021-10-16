@@ -28,9 +28,9 @@ namespace src.Data.Repositories
             _dbSet.Add(departamento);
         }
 
-        public bool Save()
-        {
-            return _context.SaveChanges() > 0;
-        }
+        // public bool Save()
+        // {
+        //     return _context.SaveChanges() > 0;
+        // }
     }
 }
