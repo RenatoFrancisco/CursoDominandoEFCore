@@ -15,23 +15,23 @@ namespace EFCore.UowRepsitory.Controllers
     public class DepartamentosController : ControllerBase
     {
         private readonly ILogger<DepartamentosController> _logger;
-        private readonly IDepartamentoRepository _departamentoRepository;
+        // private readonly IDepartamentoRepository _departamentoRepository;
         private readonly IUnitOfWork _uow;
 
 
         public DepartamentosController(ILogger<DepartamentosController> logger,
-                                       IDepartamentoRepository departamentoRepository,
+                                    //    IDepartamentoRepository departamentoRepository,
                                        IUnitOfWork uow)
         {
             _logger = logger;
-            _departamentoRepository = departamentoRepository;
+            // _departamentoRepository = departamentoRepository;
             _uow = uow;
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult> Get(int id)
         {
-            var departamento = await _departamentoRepository.GetByIdAsync(id);
+            var departamento = await _uow.DepartamentoRepository.GetByIdAsync(id);
 
             return Ok(departamento);
         }
@@ -39,7 +39,7 @@ namespace EFCore.UowRepsitory.Controllers
         [HttpPost]
         public ActionResult CreateDepartamento(Departamento departamento)
         {
-            _departamentoRepository.Add(departamento);
+            _uow.DepartamentoRepository.Add(departamento);
             // var saved = _departamentoRepository.Save();
             _uow.Commit();
 
