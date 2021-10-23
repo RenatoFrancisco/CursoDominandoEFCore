@@ -10,7 +10,8 @@ namespace EFCore.Tips
         static void Main(string[] args)
         {
             // ToQueryString();
-            DebugView();
+            // DebugView();
+            Clear();
         }
 
         static void ToQueryString()
@@ -30,6 +31,14 @@ namespace EFCore.Tips
             db.Departamentos.Add(new src.Domain.Departamento { Descricao = "TESTE DebugView"});
 
             var query = db.Departamentos.Where(p => p.Id > 2);
+        }
+
+        static void Clear()
+        {
+            using var db = new ApplicationContext();
+            db.Departamentos.Add(new src.Domain.Departamento { Descricao = "TESTE DebugView"});
+
+            db.ChangeTracker.Clear();
         }
     }
 }
