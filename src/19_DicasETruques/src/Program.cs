@@ -11,7 +11,8 @@ namespace EFCore.Tips
         {
             // ToQueryString();
             // DebugView();
-            Clear();
+            // Clear();
+            ConsultaFiltrada();
         }
 
         static void ToQueryString()
@@ -39,6 +40,16 @@ namespace EFCore.Tips
             db.Departamentos.Add(new src.Domain.Departamento { Descricao = "TESTE DebugView"});
 
             db.ChangeTracker.Clear();
+        }
+
+        static void ConsultaFiltrada()
+        {
+            using var db = new ApplicationContext();
+            var sql = db.Departamentos
+                .Include(p => p.Colaboradores.Where(c => c.Name.Contains("Teste")))
+                .ToQueryString();
+
+            Console.WriteLine(sql);
         }
     }
 }
