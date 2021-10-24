@@ -13,7 +13,8 @@ namespace EFCore.Tips
             // DebugView();
             // Clear();
             // ConsultaFiltrada();
-            SingleOrDefaultVsFirstOrDefault();
+            // SingleOrDefaultVsFirstOrDefault();
+            SemChavePrimaria();
         }
 
         static void ToQueryString()
@@ -62,6 +63,15 @@ namespace EFCore.Tips
 
             Console.WriteLine("FirtsOrDefault");
             _ = db.Departamentos.FirstOrDefault(p => p.Id > 2);
+        }
+
+        static void SemChavePrimaria()
+        {
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            var usuarioFuncoes = db.UsuarioFuncoes.Where(p => p.UsuarioId == Guid.NewGuid()).ToArray();
         }
     }
 }
