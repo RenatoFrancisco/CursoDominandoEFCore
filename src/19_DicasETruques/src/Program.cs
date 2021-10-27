@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using src.Data;
+using src.Domain;
 
 namespace EFCore.Tips
 {
@@ -17,7 +19,8 @@ namespace EFCore.Tips
             // SemChavePrimaria();
             // NaoUnicode();
             // OperadoreDeAgregacao();
-            OperadoreDeAgregacaoNoAgrupamento();
+            // OperadoreDeAgregacaoNoAgrupamento();
+            ContadorDeEventos();
         }
 
         static void ToQueryString()
@@ -118,6 +121,33 @@ namespace EFCore.Tips
                     }).ToQueryString();
 
             Console.WriteLine(sql);
+        }
+
+        static void ContadorDeEventos()
+        {
+            // dotnet tool install --global dotnet-counters
+            // dotnet counters monitor -p 47306 --counters Microsoft.EntityFrameworkCore
+            // Onde -p é o id do processo do EntityFrameworkCore
+
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            Console.WriteLine($"PID: {Process.GetCurrentProcess().Id}");
+
+            while (Console.ReadKey().Key != ConsoleKey.Escape)
+            {
+                var deparatamento = new Departamento
+                {
+                    Descricao = "Departamento sem colaborador"
+                };
+
+                db.Departamentos.Add(deparatamento);
+                db.SaveChanges();
+
+                _ = db.Departamentos.Find(1);
+                _ = db.Departamentos.AsNoTracking().FirstOrDefault();
+            }   
         }
     }
 }
