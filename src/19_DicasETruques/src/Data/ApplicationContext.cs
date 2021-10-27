@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using src.Domain;
+using src.Extensions;
 
 namespace src.Data
 {
@@ -29,6 +30,8 @@ namespace src.Data
             {
                 property.SetIsUnicode(false);
             }
+
+            modelBuilder.ToSnakeCase();
         }
     }
 }
