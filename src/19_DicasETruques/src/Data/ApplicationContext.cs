@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using src.Domain;
 
@@ -15,6 +16,19 @@ namespace src.Data
             optionsBuilder.UseNpgsql("Host=localhost;Database=Tips;Username=postgres;Password=123");
             optionsBuilder.LogTo(Console.WriteLine);
             optionsBuilder.EnableSensitiveDataLogging();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            var properties = modelBuilder.Model.GetEntityTypes()
+                .SelectMany(p => p.GetProperties())
+                .Where(p => p.ClrType == typeof(string)
+                    && p.GetColumnType() is null);
+                
+            foreach (var property in properties)
+            {
+                property.SetIsUnicode(false);
+            }
         }
     }
 }

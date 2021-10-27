@@ -14,7 +14,8 @@ namespace EFCore.Tips
             // Clear();
             // ConsultaFiltrada();
             // SingleOrDefaultVsFirstOrDefault();
-            SemChavePrimaria();
+            // SemChavePrimaria();
+            NaoUnicode();
         }
 
         static void ToQueryString()
@@ -72,6 +73,13 @@ namespace EFCore.Tips
             db.Database.EnsureCreated();
 
             var usuarioFuncoes = db.UsuarioFuncoes.Where(p => p.UsuarioId == Guid.NewGuid()).ToArray();
+        }
+
+        static void NaoUnicode()
+        {
+            using var db = new ApplicationContext();
+            var script = db.Database.GenerateCreateScript();
+            Console.WriteLine(script);
         }
     }
 }
