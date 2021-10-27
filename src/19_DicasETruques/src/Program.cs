@@ -15,7 +15,8 @@ namespace EFCore.Tips
             // ConsultaFiltrada();
             // SingleOrDefaultVsFirstOrDefault();
             // SemChavePrimaria();
-            NaoUnicode();
+            // NaoUnicode();
+            OperadoreDeAgregacao();
         }
 
         static void ToQueryString()
@@ -80,6 +81,23 @@ namespace EFCore.Tips
             using var db = new ApplicationContext();
             var script = db.Database.GenerateCreateScript();
             Console.WriteLine(script);
+        }
+
+        static void OperadoreDeAgregacao()
+        {
+            using var db = new ApplicationContext();
+
+            var sql = db.Departamentos
+                .GroupBy(p => p.Descricao)
+                .Select(p => 
+                    new 
+                    {
+                        Descricao = p.Key,
+                        Contador = p.Count(),
+                        Media = p.Average(p => p.Id),
+                        Max = p.Max(p => p.Id),
+                        Soma = p.Sum(p => p.Id)
+                    }).ToQueryString();
         }
     }
 }
