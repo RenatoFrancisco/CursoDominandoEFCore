@@ -7,14 +7,14 @@ namespace src.Data
 {
     public class ApplicationContext : DbContext
     {
-        public DbSet<Deparamento> Deparamentos { get; set; }
+        public DbSet<Departamento> Departamentos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
                 .LogTo(Console.WriteLine)
                 .UseNpgsql("Host=localhost;Database=SobreescrevendoComportamentos;Username=postgres;Password=123")
-                .ReplaceService<IQuerySqlGeneratorFactory, MySqlServerQuerySqlGeneratorFactory>()
+                .ReplaceService<IQuerySqlGeneratorFactory, MyPostgresQuerySqlGeneratorFactory>()
                 .EnableSensitiveDataLogging();
         }
     }
