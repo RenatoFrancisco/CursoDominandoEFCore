@@ -12,9 +12,9 @@ namespace src.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .LogTo(Console.WriteLine)
+                // .LogTo(Console.WriteLine)
                 .UseNpgsql("Host=localhost;Database=SobreescrevendoComportamentos;Username=postgres;Password=123")
-                .ReplaceService<IQuerySqlGeneratorFactory, MyPostgresQuerySqlGeneratorFactory>()
+                // .ReplaceService<IQuerySqlGeneratorFactory, MyPostgresQuerySqlGeneratorFactory>()
                 .EnableSensitiveDataLogging();
         }
     }
